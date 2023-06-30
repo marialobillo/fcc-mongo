@@ -1,16 +1,30 @@
 require("dotenv").config();
 // db connection
 const mongoose = require("mongoose");
-const connectionString = process.env.MONGO_URL;
+const username = encodeURIComponent("maria");
+const password = encodeURIComponent("123456");
+const connectionString = process.env.MONGO_URL; //  `mongodb+srv://fcc-mongo.lzatttz.mongodb.net/test?retryWrites=true&w=majority`
 
 
 const connectDB = async () => {
-  return mongoose.connect(connectionString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('MongoDB Connected...'))
-  .catch(err => console.log(err))
+  return mongoose.connect(
+    connectionString, 
+    { 
+      //user: username, 
+      //pass: password, 
+      useNewUrlParser: true, 
+      useUnifiedTopology: true }
+    ,
+    (error, db) => {
+      if (error) {
+        console.log("Error connecting to database", error);
+        process.exit(1);
+      } else {
+        console.log("Connected to database!");
+      }
+    }
+    )
+  
 }
 connectDB();
 
@@ -20,13 +34,21 @@ const personSchema = new mongoose.Schema({
   favoriteFoods: [String],
 })
 
-let Person = mongoose.model('Person', personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 const createAndSavePerson = (done) => {
-    done(null /*, data*/);
+  const person = new Person({
+    name: "Jane Doe",
+    age: 33,
+    favoriteFoods: ["pizza", "sushi", "salad"]
+  })
+  person.save((error, data) => {
+    error ? console.log(error) : done(null, data) 
+  })
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
+
     done(null /*, data*/);
 };
 
