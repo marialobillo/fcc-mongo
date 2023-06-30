@@ -1,8 +1,6 @@
 require("dotenv").config();
 // db connection
 const mongoose = require("mongoose");
-const username = encodeURIComponent("maria");
-const password = encodeURIComponent("123456");
 const connectionString = process.env.MONGO_URL; //  `mongodb+srv://fcc-mongo.lzatttz.mongodb.net/test?retryWrites=true&w=majority`
 
 
@@ -60,7 +58,9 @@ const createManyPeople = (arrayOfPeople, done) => {
 };
 
 const findPeopleByName = (personName, done) => {
-    done(null /*, data*/);
+  Person.find({name: personName}, (error, data) => {
+    error ? console.log(error) : done(null, data)
+  })
 };
 
 const findOneByFood = (food, done) => {
